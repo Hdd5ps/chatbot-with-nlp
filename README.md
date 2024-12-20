@@ -7,21 +7,21 @@ This project implements a chatbot using Python and natural language processing (
 ```
 chatbot-nlp
 ├── src
-│   ├── app.py                # Entry point of the Flask application
+│   ├── app.py                # Main entry point for the Flask web application
 │   ├── chatbot
 │   │   ├── __init__.py       # Initializes the chatbot package
-│   │   ├── model.py          # Defines the chatbot model architecture
-│   │   ├── train.py          # Functions for training the chatbot model
+│   │   ├── model.py          # Implementation of the chatbot model
+│   │   ├── train.py          # Responsible for training the chatbot
 │   │   └── utils.py          # Utility functions for the chatbot
 │   ├── static
 │   │   └── styles.css        # CSS styles for the web interface
 │   └── templates
-│       └── index.html        # HTML template for user interaction
+│       └── index.html        # HTML template for the web interface
 ├── data
-│   └── customer_service_interactions.csv  # Dataset for training
-├── requirements.txt          # Python dependencies
-├── README.md                 # Project documentation
-└── config.py                 # Configuration settings for Flask
+│   └── customer_service_interactions.csv  # Dataset for training the chatbot
+├── requirements.txt          # Lists project dependencies
+├── README.md                 # Documentation for the project
+└── config.py                 # Configuration settings for the application
 ```
 
 ## Setup Instructions
@@ -37,26 +37,23 @@ chatbot-nlp
    pip install -r requirements.txt
    ```
 
-3. Prepare the dataset:
-   Ensure that the `customer_service_interactions.csv` file is located in the `data` directory.
-
-4. Run the application:
+3. Run the Flask application:
    ```
    python src/app.py
    ```
 
-5. Access the chatbot interface:
-   Open your web browser and navigate to `http://127.0.0.1:5000`.
+4. Open your web browser and navigate to `http://127.0.0.1:5000` to access the chatbot interface.
 
-## Usage
+## Usage Guidelines
 
-- Interact with the chatbot through the web interface.
+- Interact with the chatbot by typing your queries in the input field and pressing enter.
 - The chatbot will respond based on the training it received from the customer service interactions dataset.
 
-## Contributing
+## Additional Information
 
-Contributions are welcome! Please submit a pull request or open an issue for any suggestions or improvements.
+- Ensure that you have the necessary NLP libraries installed (NLTK, SpaCy) as specified in `requirements.txt`.
+- Modify `config.py` for any environment-specific settings or API keys if needed.
 
 ## License
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License.

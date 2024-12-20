@@ -1,9 +1,14 @@
 from flask import Flask, request, jsonify, render_template
 from chatbot.model import ChatbotModel
-from chatbot.utils import preprocess_input
+import os
 
 app = Flask(__name__)
-chatbot = ChatbotModel()
+
+# Construct the correct path to the intents file
+base_dir = os.path.dirname(os.path.abspath(__file__))
+intents_path = os.path.join(base_dir, 'data', 'intents.json')
+
+chatbot = ChatbotModel(intents_path)
 
 @app.route('/')
 def home():
@@ -12,8 +17,7 @@ def home():
 @app.route('/chat', methods=['POST'])
 def chat():
     user_input = request.json.get('message')
-    processed_input = preprocess_input(user_input)
-    response = chatbot.generate_response(processed_input)
+    response = chatbot.get_response(user_input)
     return jsonify({'response': response})
 
 if __name__ == '__main__':

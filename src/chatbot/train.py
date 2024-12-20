@@ -1,40 +1,44 @@
 import pandas as pd
 import spacy
-from nltk.tokenize import word_tokenize
 from sklearn.model_selection import train_test_split
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import GaussianNB
 import joblib
+import os
 
-def load_data(file_path):
+# Load the SpaCy model
+nlp = spacy.load("en_core_web_sm")
+
+def preprocess_data(file_path):
     data = pd.read_csv(file_path)
-    return data
+    # Assuming the CSV has 'query' and 'response' columns
+    queries = data['query'].tolist()
+    responses = data['response'].tolist()
+    return queries, responses
 
-def preprocess_data(data):
-    nlp = spacy.load("en_core_web_sm")
-    processed_data = []
-    for text in data['text']:
-        doc = nlp(text)
-        tokens = [token.lemma_ for token in doc if not token.is_stop]
-        processed_data.append(" ".join(tokens))
-    return processed_data
+def train_model(queries, responses):
+    # Convert queries to feature vectors
+    X = [nlp(query).vector for query in queries]
+    y = responses
 
-def train_model(processed_data, labels):
-    vectorizer = CountVectorizer()
-    X = vectorizer.fit_transform(processed_data)
-    X_train, X_test, y_train, y_test = train_test_split(X, labels, test_size=0.2, random_state=42)
-    
-    model = MultinomialNB()
+    # Split the data into training and testing sets
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    # Train a Gaussian Naive Bayes classifier
+    model = GaussianNB()
     model.fit(X_train, y_train)
-    
-    joblib.dump(model, 'chatbot_model.pkl')
-    joblib.dump(vectorizer, 'vectorizer.pkl')
 
-def main():
-    data = load_data('../data/customer_service_interactions.csv')
-    processed_data = preprocess_data(data)
-    labels = data['label']
-    train_model(processed_data, labels)
+    # Save the trained model
+    joblib.dump(model, 'chatbot_model.pkl')
+
+def train_chatbot(data_path):
+    queries, responses = preprocess_data(data_path)
+    train_model(queries, responses)
 
 if __name__ == "__main__":
-    main()
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    data_path = os.path.join(base_dir, '..', 'data', 'customer_service_interactions.csv')
+    print(f"Data path: {data_path}")
+    if not os.path.exists(data_path):
+        print(f"File not found: {data_path}")
+    else:
+        train_chatbot(data_path)
